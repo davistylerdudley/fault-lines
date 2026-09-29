@@ -1,0 +1,1019 @@
+<meta charset="utf-8">
+<title>Fault Lines</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Spline+Sans+Mono:wght@400;500;600&display=swap">
+<script id="public-data" type="application/json">{"entries":[]}</script>
+<style>
+  :root{
+    --paper:#F0F3F2; --card:#FFFFFF; --ink:#1C2B33; --muted:#5B6B74; --faint:#8C99A1;
+    --line:#D7DEDC; --line-soft:#E4E9E8;
+    --you:#D9480F; --you-soft:rgba(217,72,15,.12);
+    --others:#6E7F8A;
+    --pole-a:#1F6F68; --pole-b:#6D4FA3;
+    --btn-ink:#FDFDFC;
+    --good:#2B7A4B;
+    --shadow:0 1px 2px rgba(18,28,33,.06),0 8px 28px rgba(18,28,33,.07);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#141C21; --card:#1C262C; --ink:#E8EDEC; --muted:#9FAEB5; --faint:#71828B;
+      --line:#31404A; --line-soft:#26333B;
+      --you:#FF8A3D; --you-soft:rgba(255,138,61,.14);
+      --others:#8FA0AB;
+      --pole-a:#4FB3A9; --pole-b:#A98BE0;
+      --btn-ink:#12191D;
+      --good:#5BBF85;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#141C21; --card:#1C262C; --ink:#E8EDEC; --muted:#9FAEB5; --faint:#71828B;
+    --line:#31404A; --line-soft:#26333B;
+    --you:#FF8A3D; --you-soft:rgba(255,138,61,.14);
+    --others:#8FA0AB;
+    --pole-a:#4FB3A9; --pole-b:#A98BE0;
+    --btn-ink:#12191D;
+    --good:#5BBF85;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:'Schibsted Grotesk',system-ui,-apple-system,sans-serif;
+    font-size:16px; line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  .serif{font-family:'Instrument Serif',Georgia,serif}
+  .mono{font-family:'Spline Sans Mono',ui-monospace,monospace}
+  button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+  input{font:inherit;color:inherit}
+  a{color:inherit}
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
+  .wrap-wide{max-width:920px;margin:0 auto;padding:0 20px}
+
+  /* ---------- shared bits ---------- */
+  .eyebrow{
+    font-family:'Spline Sans Mono',ui-monospace,monospace;
+    font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);
+  }
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--ink);color:var(--paper);
+    padding:13px 26px;border-radius:999px;
+    font-weight:600;font-size:15px;letter-spacing:.01em;
+    transition:transform .12s ease, opacity .12s ease;
+  }
+  .btn:hover{transform:translateY(-1px)}
+  .btn:active{transform:translateY(0)}
+  .btn.orange{background:var(--you);color:var(--btn-ink)}
+  .btn.ghost{background:none;color:var(--muted);border:1px solid var(--line)}
+  .btn.ghost:hover{color:var(--ink);border-color:var(--faint)}
+  .btn:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--you);outline-offset:2px}
+  .hidden{display:none!important}
+
+  /* ---------- landing ---------- */
+  #landing{padding:9vh 0 80px}
+  .brand{display:flex;align-items:baseline;gap:14px;margin-bottom:6vh}
+  .brand .tick{width:34px;height:2px;background:var(--you);align-self:center}
+  h1.title{
+    font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;
+    font-size:clamp(54px,9vw,92px);line-height:.98;margin:0 0 26px;
+    letter-spacing:-.015em;text-wrap:balance;
+  }
+  .lede{font-size:19px;max-width:34em;color:var(--muted);margin:0 0 14px}
+  .lede b{color:var(--ink);font-weight:600}
+  .meta-row{display:flex;gap:22px;flex-wrap:wrap;align-items:center;margin:30px 0 40px}
+  .meta-stat{font-family:'Spline Sans Mono',ui-monospace,monospace;font-size:12.5px;color:var(--muted)}
+  .meta-stat b{color:var(--ink);font-weight:600}
+  .axis-chips{display:flex;flex-wrap:wrap;gap:8px;margin:44px 0 0;max-width:640px}
+  .chip{
+    font-family:'Spline Sans Mono',ui-monospace,monospace;font-size:11.5px;color:var(--muted);
+    border:1px solid var(--line);border-radius:999px;padding:6px 13px;
+    background:var(--card);
+  }
+  .chip i{font-style:normal;color:var(--you);margin:0 6px}
+
+  /* ---------- quiz ---------- */
+  #quiz{padding:7vh 0 60px;min-height:92vh;display:flex;flex-direction:column}
+  .q-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .progress{height:2px;background:var(--line-soft);border-radius:2px;overflow:hidden;margin-bottom:8vh}
+  .progress i{display:block;height:100%;background:var(--you);width:0%;transition:width .3s ease}
+  .q-axis{margin-bottom:18px}
+  .q-card{flex:1}
+  .statement{
+    font-family:'Instrument Serif',Georgia,serif;font-weight:400;
+    font-size:clamp(26px,4.2vw,36px);line-height:1.22;letter-spacing:-.005em;
+    margin:0 0 7vh;max-width:21em;text-wrap:balance;
+    animation:rise .28s ease both;
+  }
+  @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .ctx-wrap{margin:-4vh 0 5vh;max-width:640px}
+  .ctx-btn{
+    display:inline-flex;align-items:center;gap:7px;
+    font-family:'Spline Sans Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 13px;background:var(--card);
+    transition:color .12s ease,border-color .12s ease;
+  }
+  .ctx-btn:hover{color:var(--ink);border-color:var(--faint)}
+  .ctx-btn .chev{display:inline-block;width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translate(-1px,-1px);transition:transform .15s ease}
+  .ctx-btn[aria-expanded="true"] .chev{transform:rotate(225deg) translate(-1px,-1px)}
+  .ctx{
+    margin-top:14px;padding:14px 18px 14px 18px;border-left:2px solid var(--line);
+    color:var(--muted);font-size:14.5px;line-height:1.55;max-width:40em;
+    animation:rise .2s ease both;
+  }
+  .ctx b{color:var(--ink);font-weight:600}
+  .answers{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;max-width:640px}
+  .ans{
+    border:1px solid var(--line);border-radius:12px;background:var(--card);
+    padding:14px 6px 12px;text-align:center;
+    display:flex;flex-direction:column;gap:7px;align-items:center;
+    transition:border-color .12s ease, background .12s ease, transform .1s ease;
+  }
+  .ans:hover{border-color:var(--faint);transform:translateY(-2px)}
+  .ans.sel{border-color:var(--you);background:var(--you-soft)}
+  .ans .dot{width:12px;height:12px;border-radius:50%;border:1.5px solid currentColor}
+  .ans[data-v="-2"] .dot{width:16px;height:16px}
+  .ans[data-v="2"] .dot{width:16px;height:16px;background:currentColor}
+  .ans[data-v="1"] .dot{background:currentColor}
+  .ans[data-v="0"] .dot{border-style:dashed}
+  .ans .lab{font-size:11px;line-height:1.25;color:var(--muted)}
+  .ans .key{font-family:'Spline Sans Mono',ui-monospace,monospace;font-size:10px;color:var(--faint)}
+  .q-nav{display:flex;justify-content:space-between;align-items:center;margin-top:6vh}
+  .navlink{color:var(--muted);font-size:13.5px}
+  .navlink:hover{color:var(--ink)}
+  .navlink:disabled{opacity:.35;cursor:default}
+  @media (max-width:560px){
+    .answers{grid-template-columns:repeat(5,1fr);gap:5px}
+    .ans{padding:12px 3px 10px}
+    .ans .lab{font-size:9.5px}
+    .ans .key{display:none}
+  }
+
+  /* ---------- results ---------- */
+  #results{padding:8vh 0 100px}
+  .arch-eyebrow{margin-bottom:16px}
+  h2.arch{
+    font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;
+    font-size:clamp(40px,7vw,66px);line-height:1.02;margin:0 0 30px;letter-spacing:-.01em;
+    text-wrap:balance;
+  }
+  .arch-sub{color:var(--muted);font-size:14.5px;line-height:1.5;margin:-14px 0 32px;max-width:44em}
+  .arch-sub b{color:var(--ink);font-weight:600}
+  .writeup{max-width:41em;font-size:16.5px}
+  .writeup p{margin:0 0 1.1em}
+  .writeup .tension{
+    border-left:2px solid var(--you);padding:2px 0 2px 16px;color:var(--muted);
+    font-size:15.5px;margin:1.4em 0;
+  }
+  .section-h{
+    display:flex;align-items:baseline;gap:14px;margin:72px 0 8px;
+  }
+  .section-h .rule{flex:1;height:1px;background:var(--line)}
+  .section-sub{color:var(--muted);font-size:14px;margin:0 0 30px;max-width:44em}
+
+  /* axis strips */
+  .strips{display:flex;flex-direction:column;gap:26px}
+  .strip{padding:0}
+  .strip-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:2px}
+  .strip-name{font-weight:600;font-size:14.5px}
+  .strip-score{font-family:'Spline Sans Mono',ui-monospace,monospace;font-size:12px;color:var(--muted)}
+  .strip-score b{color:var(--ink)}
+  .lane{position:relative;height:64px}
+  .lane-line{position:absolute;left:0;right:0;top:31px;height:1.5px;background:var(--line)}
+  .lane .tick{position:absolute;top:25px;width:1px;height:14px;background:var(--line);transform:translateX(-50%)}
+  .lane .tick.mid{top:22px;height:20px;width:1.5px}
+  .odot,.oref{position:absolute;top:32px;cursor:default;transition:transform .1s ease,border-color .1s ease,background .1s ease}
+  .odot{width:9px;height:9px;border-radius:50%;background:var(--others);opacity:.6;transform:translate(-50%,-50%)}
+  .oref{width:9px;height:9px;border:1.4px solid var(--others);background:var(--paper);transform:translate(-50%,-50%) rotate(45deg)}
+  .odot:hover{opacity:1;transform:translate(-50%,-50%) scale(1.4);z-index:3}
+  .oref:hover{border-color:var(--ink);background:var(--ink);transform:translate(-50%,-50%) rotate(45deg) scale(1.4);z-index:3}
+  .mdot{position:absolute;top:32px;width:13px;height:13px;border-radius:50%;background:var(--you);border:2px solid var(--paper);transform:translate(-50%,-50%);box-shadow:0 0 0 4px var(--you-soft);z-index:2;pointer-events:none}
+  .strip-poles{display:flex;justify-content:space-between;gap:20px}
+  .strip-poles span{display:flex;flex-direction:column;gap:3px;font-family:'Spline Sans Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
+  .strip-poles .pa{color:var(--pole-a)} .strip-poles .pb{color:var(--pole-b);align-items:flex-end;text-align:right}
+  .strip-poles small{font-family:'Schibsted Grotesk',system-ui,sans-serif;font-size:12px;letter-spacing:0;text-transform:none;color:var(--muted)}
+  .lane-legend{display:flex;gap:18px;align-items:center;font-family:'Spline Sans Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin:0 0 22px}
+  .lane-legend i{display:inline-block;vertical-align:middle;margin-right:7px}
+  .lane-legend .lg-ref{width:8px;height:8px;border:1.4px solid var(--others);transform:rotate(45deg)}
+  .lane-legend .lg-dot{width:9px;height:9px;border-radius:50%;background:var(--others);opacity:.6}
+  .lane-legend .lg-you{width:10px;height:10px;border-radius:50%;background:var(--you)}
+  #tip{
+    position:fixed;z-index:70;pointer-events:none;opacity:0;transition:opacity .1s ease;
+    background:var(--ink);color:var(--paper);border-radius:8px;padding:7px 11px;
+    font-size:12.5px;line-height:1.35;max-width:260px;box-shadow:var(--shadow);
+  }
+  #tip.show{opacity:1}
+  #tip b{display:block;font-weight:600}
+  #tip span{color:var(--paper);opacity:.7;font-family:'Spline Sans Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
+
+  /* scatter map */
+  .map-controls{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+  .map-controls label{font-family:'Spline Sans Mono',ui-monospace,monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+  .map-controls select{
+    font:inherit;font-size:13.5px;color:var(--ink);background:var(--card);
+    border:1px solid var(--line);border-radius:8px;padding:7px 10px;
+  }
+  #scatter{display:block;width:100%;height:auto;background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+
+  /* matches */
+  .matches{display:flex;flex-direction:column;gap:10px;max-width:560px}
+  .match{
+    display:flex;align-items:center;gap:14px;
+    background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 18px;
+  }
+  .match .pct{font-family:'Spline Sans Mono',ui-monospace,monospace;font-size:15px;font-weight:600;min-width:52px}
+  .match .who{font-weight:600;font-size:14.5px}
+  .match .what{color:var(--muted);font-size:13px}
+  .match.ref .who::after{content:"archetype";font-family:'Spline Sans Mono',ui-monospace,monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-left:8px}
+
+  /* archetype cards */
+  .arch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+  .acard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 22px 18px;position:relative}
+  .acard.nearest{border-color:var(--you)}
+  .acard .badge{
+    position:absolute;top:14px;right:14px;
+    font-family:'Spline Sans Mono',ui-monospace,monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--you);border:1px solid var(--you);border-radius:999px;padding:3px 10px;
+  }
+  .acard h4{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:23px;margin:0 0 2px;letter-spacing:-.005em}
+  .acard .adesc{color:var(--muted);font-size:13px;margin:0 0 14px}
+  .acard .arow{font-size:12.5px;line-height:1.5;margin-top:9px;color:var(--ink)}
+  .acard .arow .k{
+    display:block;font-family:'Spline Sans Mono',ui-monospace,monospace;font-size:9.5px;
+    letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:1px;
+  }
+  .acard .arow.vs{color:var(--muted)}
+  .disc{color:var(--faint)}
+
+  /* privacy card */
+  .privacy{
+    margin-top:80px;background:var(--card);border:1px solid var(--line);
+    border-radius:20px;padding:30px 30px 26px;box-shadow:var(--shadow);max-width:620px;
+  }
+  .privacy h3{margin:0 0 6px;font-size:17px}
+  .privacy p{margin:0 0 18px;color:var(--muted);font-size:14px;max-width:38em}
+  .priv-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .priv-name{
+    border:1px solid var(--line);border-radius:999px;background:var(--paper);
+    padding:11px 18px;font-size:14.5px;min-width:200px;
+  }
+  .priv-status{display:flex;align-items:center;gap:10px;font-size:14px}
+  .pill{
+    font-family:'Spline Sans Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    padding:4px 12px;border-radius:999px;border:1px solid var(--line);color:var(--muted);
+  }
+  .pill.public{border-color:var(--good);color:var(--good)}
+  .notice{margin-top:14px;font-size:13px;color:var(--muted)}
+  .notice.err{color:var(--you)}
+
+  .foot-row{display:flex;gap:18px;align-items:center;margin-top:44px;flex-wrap:wrap}
+
+  /* toast */
+  #toast{
+    position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(8px);
+    background:var(--ink);color:var(--paper);border-radius:999px;padding:11px 22px;
+    font-size:14px;opacity:0;pointer-events:none;transition:opacity .25s ease,transform .25s ease;
+    z-index:50;box-shadow:var(--shadow);
+  }
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation:none!important;transition:none!important}
+  }
+</style>
+
+<div id="landing">
+  <div class="wrap">
+    <div class="brand"><span class="tick"></span><span class="eyebrow">A worldview survey · 2026</span></div>
+    <h1 class="title">Fault Lines</h1>
+    <p class="lede">The old compass is a relic — two axes drawn for a century that ended. This maps where you actually stand on <b>nine live fault lines</b> of the mid-2020s: some political, some closer to philosophy.</p>
+    <p class="lede" style="font-size:15.5px">36 statements · about 5 minutes · you choose whether your result joins the shared map.</p>
+    <p class="lede" style="font-size:15.5px">Take each statement at face value — answer what <b>you</b> believe, not what you suspect the people who say it are really after.</p>
+    <div class="meta-row">
+      <button class="btn orange" id="begin">Begin the survey</button>
+      <span class="meta-stat" id="pub-count"></span>
+    </div>
+    <div class="axis-chips" id="axis-chips"></div>
+  </div>
+</div>
+
+<div id="quiz" class="hidden">
+  <div class="wrap">
+    <div class="q-top">
+      <span class="eyebrow q-axis" id="q-axis"></span>
+      <span class="mono" style="font-size:11.5px;color:var(--faint)" id="q-count"></span>
+    </div>
+    <div class="progress"><i id="q-bar"></i></div>
+    <div class="q-card">
+      <p class="statement" id="q-text"></p>
+      <div class="ctx-wrap">
+        <button class="ctx-btn" id="ctx-btn" aria-expanded="false" aria-controls="ctx-panel">What's the debate? <span class="chev"></span></button>
+        <div class="ctx hidden" id="ctx-panel"></div>
+      </div>
+      <div class="answers" id="q-answers"></div>
+    </div>
+    <div class="q-nav">
+      <button class="navlink" id="q-back">&larr; Previous</button>
+      <span class="mono" style="font-size:10.5px;color:var(--faint)">answer at face value · keys 1–5</span>
+    </div>
+  </div>
+</div>
+
+<div id="results" class="hidden">
+  <div class="wrap-wide">
+    <div class="eyebrow arch-eyebrow" id="res-eyebrow">Your reading</div>
+    <h2 class="arch" id="arch-title"></h2>
+    <p class="arch-sub" id="arch-sub"></p>
+    <div class="writeup" id="writeup"></div>
+
+    <div class="section-h"><span class="eyebrow">The eight fault lines</span><span class="rule"></span></div>
+    <p class="section-sub">Your position on each line, plotted against everyone who has made their result public<span id="strip-note"></span>. Hover any marker to see who it is.</p>
+    <div class="lane-legend"><span><i class="lg-you"></i>you</span><span><i class="lg-ref"></i>archetype</span><span><i class="lg-dot"></i>a real person</span></div>
+    <div class="strips" id="strips"></div>
+
+    <div class="section-h"><span class="eyebrow">The map</span><span class="rule"></span></div>
+    <p class="section-sub">Project the community onto any two fault lines. Diamonds are reference archetypes; dots are real people.</p>
+    <div class="map-controls">
+      <label>x</label><select id="map-x"></select>
+      <label>y</label><select id="map-y"></select>
+    </div>
+    <svg id="scatter" viewBox="0 0 920 560" role="img" aria-label="Scatter map of results"></svg>
+
+    <div class="section-h"><span class="eyebrow">Nearest to you</span><span class="rule"></span></div>
+    <div class="matches" id="matches"></div>
+
+    <div class="section-h"><span class="eyebrow">The eleven archetypes</span><span class="rule"></span></div>
+    <p class="section-sub">The diamonds on the map, with the figures who sit nearest each one. <span class="disc">A caveat: these matches are impressionistic, based on public stances as of mid-2026 — the fault lines are moving fast, and real people drift, hedge, and surprise in ways archetypes don't.</span></p>
+    <div class="arch-grid" id="arch-grid"></div>
+
+    <div class="privacy" id="privacy-card">
+      <h3>Put yourself on the map?</h3>
+      <p>Your result is <b>private by default</b> — stored only on this device. Make it public and everyone who opens this page sees your point on the map and can match against you. You can flip it back any time.</p>
+      <div class="priv-row" id="priv-controls"></div>
+      <div class="notice" id="priv-notice"></div>
+    </div>
+
+    <div class="foot-row">
+      <button class="btn ghost" id="retake">Retake the survey</button>
+      <span class="mono" style="font-size:11px;color:var(--faint)" id="res-count"></span>
+    </div>
+  </div>
+</div>
+
+<div id="toast" role="status"></div>
+<div id="tip" role="tooltip"></div>
+
+<script>
+/* =============== DATA =============== */
+/*__AXES_DATA__*/
+const AXES = [
+{
+  key:'tempo', name:'The Tempo', domain:'technology & speed',
+  left:{label:'Precautionist', hint:'slow AI down, steer it carefully', adj:'Precautionary', noun:'Precautionist',
+    strong:"You look at the fastest technological buildout in history and see brakes worth pulling — not because you fear the future, but because you want there to be one. Irreversible mistakes at civilizational scale don't offer do-overs.",
+    lean:"You're not anti-technology, but you think “move fast” stops being a virtue when the thing moving may end up smarter than its makers. You'd trade some progress for more certainty."},
+  right:{label:'Accelerationist', hint:'speed AI up, ship it now', adj:'Accelerationist', noun:'Accelerationist',
+    strong:"You think the greatest risk is stagnation, not speed. Disease, poverty, and drudgery kill people every day the future is delayed — and hand-wringing about hypothetical catastrophe reads to you as a luxury tax paid by the world's poorest.",
+    lean:"You lean toward letting the engine run. New technology has been humanity's best bet for centuries, and you'd rather manage its problems in motion than freeze in place."},
+  center:"On technological speed you're genuinely torn — you can hold both the promise and the peril in view at once, which most people can't.",
+  questions:[
+    {t:"Compared with a world where AI keeps advancing at today's pace, a ten-year freeze on building more capable AI models would leave humanity worse off.", dir:1, ctx:"Frontier AI models have improved rapidly since 2022, and some researchers and lab leaders argue that continuing at this pace risks accidents, misuse, or systems that outrun our ability to control them \u2014 hence proposals for pauses or moratoria on the most capable models. Others argue that AI is already accelerating drug discovery, science, and productivity, and that a freeze would cost lives and prosperity while doing little to make the eventual systems safer. The question is whether you think the expected benefits of continued progress outweigh the risks of moving quickly."},
+    {t:"I'd rather the leading AI labs slow down, even if that means losing ground to rivals who won't.", dir:-1, ctx:"The leading labs (OpenAI, Anthropic, Google DeepMind, Meta, xAI) compete intensely, and each says it can't unilaterally slow down without ceding ground to less careful rivals. Critics say this \u2018race dynamic\u2019 is exactly the problem: it pushes everyone to cut corners on safety testing. The trade-off is between the safety gained by a lab moving more carefully and the influence it loses if a less cautious competitor gets there first."},
+    {t:"Historically, humanity has overrated the dangers of new technology and underrated its benefits.", dir:1, ctx:"Techno-optimists point to past panics \u2014 trains, electricity, vaccines, nuclear power, GMOs \u2014 that turned out far better than feared, and argue that precaution has mostly cost us progress. Skeptics respond that some warnings were right (leaded gasoline, asbestos, CFCs, social media and teen mental health) and that AI may be different in kind because it acts and improves on its own. The question is which pattern you think dominates."},
+    {t:"If the West slows AI development, China won't — so unilateral restraint is just surrender with extra steps.", dir:1, ctx:"A common argument in Washington is that any U.S. slowdown simply hands the lead to China, so restraint is self-defeating. Others argue this framing is overstated \u2014 China faces chip export controls and its own regulatory constraints \u2014 and that racing rhetoric is used to block rules the labs would rather not follow. Whether you think coordination or competition is the realistic default shapes how you answer."},
+  ]
+},
+{
+  key:'growth', name:'Growth & Limits', domain:'growth & limits',
+  left:{label:'Steward', hint:'consume less, live within limits', adj:'Degrowth', noun:'Steward',
+    strong:"You believe the growth machine is eating its own foundations. A civilization that treats the biosphere as inventory strikes you as innumerate, and you'd rather live better with less than bigger with more.",
+    lean:"You suspect “more” stopped making people happier a while ago, and that some deliberate restraint — in consumption, in extraction — is overdue."},
+  right:{label:'Builder', hint:'build more, grow out of scarcity', adj:'Abundance', noun:'Builder',
+    strong:"Scarcity, to you, is mostly a policy choice. Housing is expensive because we banned housing; energy is dirty because we banned clean energy. Your instinct in every shortage is the same: build.",
+    lean:"You lean toward building your way out of problems — more homes, more power, more infrastructure — and you're suspicious of anyone whose whole plan is subtraction."},
+  center:"You want growth and limits at once — build the reactors, spare the forest — and you judge each fight on its merits.",
+  questions:[
+    {t:"The fix for expensive housing and energy is to build far more of both — even over the objections of the people already there.", dir:1, ctx:"The \u2018YIMBY\u2019 and \u2018abundance\u2019 movements argue that housing and energy are expensive mainly because zoning, permitting, and environmental review make it too hard to build, and that the fix is to override local objections. Opponents \u2014 from neighborhood groups to some environmentalists \u2014 argue that local control protects communities, ecosystems, and existing residents, and that more building mostly benefits developers. This has become a live fight inside the Democratic coalition as well as between parties."},
+    {t:"The average American should consume less than they do today — smaller homes, fewer flights, less meat — even if it means a smaller economy.", dir:-1, ctx:"Degrowth advocates argue that rich-country consumption levels can't be extended to eight billion people within planetary limits, so wealthy societies should deliberately shrink their material footprint. Critics argue that growth and decarbonization are compatible (\u2018green growth\u2019), that shrinking economies harm the poor first, and that voters will never accept it. This is asking whether you'd personally endorse consuming less than today, not less than a hypothetical wasteful alternative."},
+    {t:"If a company proposed building a large data center or power plant a mile from my home, I would support it.", dir:1, ctx:"AI's electricity demand has triggered a wave of data center and power plant construction, and local fights over water use, noise, grid costs, and land. Supporters say this infrastructure brings jobs and tax revenue and signals a region is part of the future economy. Opponents argue residents bear the costs while the benefits flow to distant tech firms, and that some projects raise local electricity prices."},
+    {t:"We will invent our way past every environmental limit, as we always have.", dir:1, ctx:"Ecomodernists argue that technology has repeatedly beaten predicted limits \u2014 the Malthusian famines and \u2018peak oil\u2019 that never came \u2014 and will do the same for climate and biodiversity through nuclear, solar, and engineered solutions. Ecologists counter that some limits (extinction, ocean heat, topsoil loss) are physical and irreversible, and that past escapes were partly luck. The disagreement is about whether ingenuity is reliably faster than the damage."},
+  ]
+},
+{
+  key:'roots', name:'Roots & Flows', domain:'belonging',
+  left:{label:'Cosmopolitan', hint:'open borders, global kinship', adj:'Cosmopolitan', noun:'Cosmopolitan',
+    strong:"Your community is chosen, not inherited. You feel the pull of the whole species more than any flag, and you think the moral circle should keep widening — borders included.",
+    lean:"You lean outward: toward movement, mixture, and the sense that where someone happened to be born shouldn't decide what they're owed."},
+  right:{label:'Rooted', hint:'nation, place, and inheritance first', adj:'Rooted', noun:'Localist',
+    strong:"You believe people are grown in places, not spawned in markets. A nation, a town, a congregation — these aren't accidents to be optimized away but the soil obligations grow in, and you'd defend them at a price.",
+    lean:"You lean toward the local and the particular — loyalty to what's yours before abstractions about everyone — without wanting the drawbridge fully raised."},
+  center:"You hold dual citizenship between somewhere and everywhere — rooted enough to belong, open enough to leave.",
+  questions:[
+    {t:"Western civilization — its science, its liberties, its art — is not merely different from other civilizations but an exceptional achievement worth defending as such.", dir:1, ctx:"One side holds that the West's distinctive institutions \u2014 scientific method, individual rights, the rule of law, liberal democracy \u2014 are genuinely exceptional achievements and should be taught and defended as such. The other holds that every civilization has its achievements and crimes, that \u2018Western\u2019 is a blurry category built on borrowed ideas, and that exceptionalism slides easily into chauvinism. This is a question about civilizational ranking, not about whether you like living in the West."},
+    {t:"A country has the right to limit immigration to protect its national culture, even when more immigration would make it richer.", dir:1, ctx:"Economists broadly agree that immigration raises overall GDP, though its effects on particular workers are debated. The political fight is over whether a nation is entitled to prioritize cultural continuity \u2014 language, customs, social trust \u2014 over that economic gain. Cosmopolitans argue culture is always changing and that restriction is exclusion dressed up as preservation; restrictionists argue a country is more than a labor market and its people are entitled to choose who joins it."},
+    {t:"Borders should keep getting easier to cross — for work, for study, for love.", dir:-1, ctx:"Since the 1990s, global movement of students, workers, and families has grown enormously, and much of the world's professional class takes easy mobility for granted. A backlash across the U.S. and Europe now argues that mobility has run ahead of what publics consent to. This asks about direction of travel: should movement across borders keep getting easier, or has it gone far enough (or too far)?"},
+    {t:"You owe no less to a stranger on the far side of the world than to a neighbor on your own street.", dir:-1, ctx:"This is the classic debate between moral universalism and partiality. Philosophers like Peter Singer argue that distance and nationality are morally irrelevant \u2014 a life is a life \u2014 and that this implies large obligations to distant strangers. Others argue that special obligations to family, neighbors, and compatriots are not a bias to overcome but part of what makes a moral life possible. It is philosophical, but it drives real disagreements about foreign aid, refugees, and trade."},
+  ]
+},
+{
+  key:'order', name:'The Institutions', domain:'institutions',
+  left:{label:'Insurgent', hint:'tear down the failed institutions', adj:'Insurgent', noun:'Insurgent',
+    strong:"You've watched the institutions grade their own homework for too long. Universities, agencies, legacy media — you think the class that runs them failed upward, and that renewal now requires demolition.",
+    lean:"You keep some faith in institutions in principle, but the current ones have earned their distrust — a shock to the system reads to you as medicine, not vandalism."},
+  right:{label:'Institutionalist', hint:'repair and trust the institutions', adj:'Institutionalist', noun:'Institutionalist',
+    strong:"You know exactly how much of civilization hangs on boring things working — courts, journals, agencies, peaceful transfers of power. Wreckers strike you as arsonists in a library: whatever the grievance, the books still burn.",
+    lean:"You'd rather repair than raze. The institutions are flawed and often maddening, but you've seen what fills the vacuum when they fall."},
+  center:"You're neither a wrecker nor a defender of the status quo — you want the institutions humbled and preserved at the same time.",
+  questions:[
+    {t:"Our major institutions — universities, agencies, the press — are broken enough that rebuilding from scratch beats reforming them.", dir:-1, ctx:"Trust in universities, federal agencies, and the press has fallen sharply, and critics across the spectrum argue these institutions have become self-serving, ideologically captured, or simply incompetent. Defenders argue that they still work far better than the alternatives and that \u2018rebuild from scratch\u2019 mostly means destroying expertise while leaving nothing in its place. The question is whether the current institutions are reformable from within."},
+    {t:"When expert consensus and public opinion collide, the experts are usually closer to the truth.", dir:1, ctx:"Public health guidance during COVID, economic forecasts, and dietary advice have all seen expert consensus revised or contradicted, feeding skepticism about deference to experts. Defenders argue that experts are still right far more often than the public on technical questions and that the failures are remembered while the successes are invisible. This asks about the general case, not any single episode."},
+    {t:"It's good for the country when voters occasionally elect a leader who fires senior civil servants and ignores established norms to shake up the system.", dir:-1, ctx:"Populist leaders in many democracies have campaigned explicitly on disruption \u2014 firing officials, ignoring norms, and breaking the \u2018system\u2019. Supporters argue that periodic shocks are the only thing that forces entrenched elites to respond to voters. Critics argue that norms and institutions are far easier to destroy than to rebuild, and that the damage outlasts the leader."},
+    {t:"I'd rather be governed by 500 names picked from the phone book than by the faculty of an elite university.", dir:-1, ctx:"This is William F. Buckley's famous line (originally 2,000 names from the Boston phone book vs. the Harvard faculty). It is a test of whether you think ordinary common sense or specialized expertise produces better government. Those who agree see credentialed elites as insulated and ideologically uniform; those who disagree think governing a modern state genuinely requires knowledge most people don't have."},
+  ]
+},
+{
+  key:'ladder', name:'The Ladder', domain:'fairness',
+  left:{label:'Structuralist', hint:'outcomes reflect birth and rigged rules', adj:'Structuralist', noun:'Structuralist',
+    strong:"You see the ladder as rigged before anyone starts climbing. Birth, inheritance, race, and written-in-advance rules explain who has what far better than effort does — and a society that calls its luckiest members its most deserving is telling itself a flattering lie.",
+    lean:"You lean structural: effort is real, but the starting lines are staggered enough that “deserved” is doing too much work in most success stories."},
+  right:{label:'Meritocrat', hint:'outcomes reflect effort and talent', adj:'Meritocratic', noun:'Meritocrat',
+    strong:"You believe desert is real. Effort and talent still move people, the rules reward contribution more than critics admit, and telling people the game is rigged robs them of the one thing they control — their agency.",
+    lean:"You lean meritocratic: luck exists, but work and choices still explain more than structure — and agency is the more useful story to tell people either way."},
+  center:"You hold effort and luck in a single frame — the ladder is real, and so are the staggered starting lines.",
+  questions:[
+    {t:"People who end up with more usually earned it — success still tracks work and talent more than luck and inheritance.", dir:1, ctx:"Research finds that both effort and circumstances matter, but people disagree sharply about the balance. The meritocratic view says the U.S. still rewards work and talent, and that most wealth is created rather than inherited. The structural view says the biggest predictors of wealth are parental wealth, neighborhood, and schooling, and that \u2018earned\u2019 mostly describes people who started ahead."},
+    {t:"Where you're born, to whom, and with what skin decides more of your life than anything you choose.", dir:-1, ctx:"Studies of economic mobility show that birthplace, parental income, and race predict adult outcomes strongly \u2014 but also that individual choices (education, work, family) move the needle within those constraints. This asks which you think is the bigger force in a typical life: circumstances you didn't choose, or the choices you did."},
+    {t:"Racial discrimination is still the main reason for the wealth gap between Black and white Americans today.", dir:-1, ctx:"The median white American household holds several times the wealth of the median Black household. One explanation centers on discrimination past and present \u2014 slavery, redlining, unequal lending and hiring \u2014 compounding over generations. Competing explanations emphasize differences in family structure, education, and geography, and argue that discrimination is no longer the main driver. Most scholars think multiple causes operate; this asks which you think is primary."},
+    {t:"America's deepest divide is class, not race.", dir:1, ctx:"The \u2018class-first\u2019 view \u2014 shared by many on the left and much of the populist right \u2014 holds that economic position shapes life more than race does, and that focusing on race divides people who share economic interests. The opposing view holds that race remains an independent and central fault line in American life that class analysis cannot explain away. The two sides disagree about diagnosis, which drives disagreement about remedies."},
+  ]
+},
+{
+  key:'power', name:'Power & Openness', domain:'power & openness',
+  left:{label:'Decentralist', hint:'open the powerful tools to everyone', adj:'Open-Source', noun:'Decentralist',
+    strong:"You'd rather every hand held the tools than trust a few appointed custodians — because custodians, historically, become owners. Open weights, open protocols, the right to exit: your politics is permissionlessness.",
+    lean:"You lean toward openness and against gatekeepers, though you'd concede a few doors may genuinely need locks."},
+  right:{label:'Custodian', hint:'keep dangerous tools in a few accountable hands', adj:'Custodial', noun:'Custodian',
+    strong:"You accept an uncomfortable truth: some capabilities are too dangerous to hand to eight billion people. You'd rather concentrate power somewhere accountable than diffuse it somewhere untraceable.",
+    lean:"You lean toward guarded doors — not because you love the guards, but because you've thought hard about what walks in without them."},
+  center:"On who should hold dangerous capabilities you're a case-by-case judge — open by default, closed by exception.",
+  questions:[
+    {t:"The most powerful AI models should be released openly for anyone to build on, not kept inside a handful of labs.", dir:-1, ctx:"\u2018Open-weight\u2019 models (like Meta's Llama or DeepSeek) can be downloaded and run by anyone; closed models (like GPT or Claude) are accessed only through their maker's servers. Supporters of open release argue it spreads benefits, enables scrutiny, and prevents a few companies from controlling a foundational technology. Opponents argue that once weights are public they can't be recalled, and that the most capable models could help bad actors with cyberattacks or bioweapons."},
+    {t:"Encryption that governments cannot break should be legal for everyone, even if it means some criminals can never be caught.", dir:-1, ctx:"End-to-end encryption (as in Signal, WhatsApp, and iMessage) means no one \u2014 not even the provider \u2014 can read messages. Governments periodically push for \u2018lawful access\u2019 back doors to investigate terrorism and child abuse; the EU's \u2018chat control\u2019 proposals are a recent example. Privacy advocates and most security engineers argue that any back door for police is a back door for everyone, and that strong encryption protects dissidents, journalists, and ordinary users."},
+    {t:"People should be free to use cryptocurrencies and decentralized finance without government-licensed intermediaries, even though it makes fraud easier to get away with.", dir:-1, ctx:"Decentralized finance lets people hold and move money without banks or licensed exchanges. Supporters argue this is financial freedom \u2014 especially for people in unstable countries or excluded from banking \u2014 and that regulation mostly protects incumbents. Critics point to fraud, collapses like FTX, and use by criminals, and argue that consumer protection requires licensed intermediaries."},
+    {t:"Companies should need government approval before releasing a new frontier AI model, the way drug makers need FDA approval.", dir:1, ctx:"Today, AI companies can release models without any pre-market approval, relying on their own testing. Proposals for a licensing regime would require safety evaluations before release, like FDA drug approval. Supporters say the most powerful models are too consequential to be self-certified; opponents say an approval process would entrench big incumbents, slow beneficial uses, and hand regulators power they lack the expertise to use well."},
+  ]
+},
+{
+  key:'human', name:'The Human Given', domain:'the human',
+  left:{label:'Preservationist', hint:'keep human nature as it is given', adj:'Preservationist', noun:'Preservationist',
+    strong:"You hold that human nature is an inheritance, not a beta release. Aging, chance, even suffering are load-bearing walls of meaning — and a species that edits its children and outsources its intimacy is dismantling something it doesn't understand.",
+    lean:"You're wary of upgrading the human package. Some interventions are healing; others feel like a category error — and you can tell the difference by instinct even without a rule."},
+  right:{label:'Promethean', hint:'upgrade the human condition', adj:'Promethean', noun:'Promethean',
+    strong:"You see “human nature” as a first draft, not a covenant. Disease, decline, the genetic lottery — these are engineering problems wearing sacred robes, and you count it moral progress to strip the robes off.",
+    lean:"You lean toward the upgrade path: careful, consensual improvement of the human condition strikes you as continuous with medicine, not a betrayal of it."},
+  center:"You'd mend the human condition but hesitate to remake it — open to the medicine, unsure about the upgrades.",
+  questions:[
+    {t:"If embryo screening can safely give a child better odds of health or intelligence, forbidding it is its own kind of harm.", dir:1, ctx:"IVF clinics can already screen embryos for single-gene diseases, and some now offer \u2018polygenic\u2019 scores predicting risk of common conditions or even traits like height and cognitive ability. Supporters argue that parents choosing healthier or more capable children is an extension of ordinary parental care. Critics warn of a new eugenics, of stigma against people with the \u2018deselected\u2019 traits, and of a technology available first to the wealthy."},
+    {t:"It would be wrong to use implants or drugs to permanently boost a healthy adult's memory or intelligence, even if they were proven safe.", dir:-1, ctx:"Cognitive enhancement \u2014 from stimulants used off-label to experimental brain\u2013computer interfaces \u2014 raises the question of whether improving a healthy person is different in kind from treating a sick one. Proponents argue there is no principled line between glasses, coffee, and an implant. Opponents argue that engineering the human mind changes what it means to be a person and creates pressure on everyone to keep up."},
+    {t:"An AI companion that genuinely eases someone's loneliness is a real relationship, not a counterfeit one.", dir:1, ctx:"Tens of millions of people now talk daily with AI companions, and studies find both reduced loneliness in the short term and signs of dependency and withdrawal from human relationships. One view holds that a relationship is defined by its effect on the person \u2014 comfort is comfort. The other holds that a relationship requires another mind that can be genuinely affected by you, and that an AI companion is a simulation that displaces the real thing."},
+    {t:"If science could let people live for 500 years, we should do it — death is a problem to solve, not a fact to accept.", dir:1, ctx:"Longevity research \u2014 from senolytic drugs to partial cellular reprogramming \u2014 has attracted major investment on the premise that aging is a treatable disease. Advocates argue death is the greatest cause of suffering and that curing it is the obvious moral priority. Others argue that mortality gives life its shape and urgency, that radical life extension would freeze power and wealth in place, and that a 500-year life is not obviously desirable."},
+  ]
+},
+{
+  key:'meaning', name:'Meaning', domain:'meaning',
+  left:{label:'Secular', hint:'the material world is all there is', adj:'Secular', noun:'Materialist',
+    strong:"You think the universe writes no meanings — we do. That isn't bleakness; it's adulthood. Whatever holes religion left, you'd rather live honestly in an indifferent cosmos than comfortably inside a story.",
+    lean:"You lean secular: the material account of the world basically holds, even if you understand why people keep reaching past it."},
+  right:{label:'Transcendent', hint:'something sacred stands above it', adj:'Transcendent', noun:'Seeker',
+    strong:"You're convinced the disenchantment of the world was a wrong turn. Something real sits above the material — God, the sacred, the ground of being — and societies that deny it don't become rational; they become haunted.",
+    lean:"You suspect the secular settlement left something out — that the hunger for the sacred is evidence of something, not just a bug in the primate brain."},
+  center:"You live on the border of belief — too honest to claim faith, too haunted to dismiss it.",
+  questions:[
+    {t:"The material world that science describes is the whole story — there is nothing beyond it.", dir:-1, ctx:"This is the core question of metaphysics: is reality exhausted by matter, energy, and physical law (materialism or naturalism), or is there something more \u2014 God, spirit, consciousness that isn't reducible to physics, moral truths that exist independently of us? Most scientists work as methodological naturalists, but that doesn't settle whether naturalism is the whole truth."},
+    {t:"As religious attendance has fallen, Americans have become lonelier and more politically extreme — and the two are connected.", dir:1, ctx:"Religious affiliation has fallen for decades in the U.S. and Europe, and some observers argue that the rise of political tribalism, wellness culture, fandom, and conspiracy thinking represents people seeking the belonging and meaning religion once provided. Skeptics argue that secular people are not measurably less happy or moral, and that the \u2018God-shaped hole\u2019 is a story religious people tell about the irreligious."},
+    {t:"Religious belief is mostly a product of people wanting answers that science hasn't yet provided.", dir:-1, ctx:"One explanation for religion is that it fills explanatory gaps \u2014 lightning, disease, death \u2014 and retreats as science advances (the \u2018god of the gaps\u2019). Believers and many scholars of religion respond that faith is mostly about meaning, morality, community, and encounter, not explanation, and that it has not retreated in the way that theory predicts. This asks what you think religion is fundamentally for."},
+    {t:"I envy people of faith more than I pity them.", dir:1, ctx:"A test of your gut orientation toward religious life rather than your beliefs. Some non-believers see in faith a coherence, community, and consolation they wish they had; others see self-deception they are glad to be free of. Believers can answer it too: do you regard your own faith as a gift, or as something you would drop if you could?"},
+  ]
+},
+{
+  key:'risk', name:'Safety & Vitality', domain:'risk & care',
+  left:{label:'Guardian', hint:'protect people, build floors under them', adj:'Guardian', noun:'Guardian',
+    strong:"You measure a civilization by what it refuses to let happen to its weakest members. Risk romantics talk beautifully about vitality; you notice they're rarely the ones who pay when the net is cut.",
+    lean:"You lean protective: floors under people, guardrails on systems — dignity shouldn't be a prize reserved for the lucky."},
+  right:{label:'Vitalist', hint:'let risk and struggle forge strength', adj:'Vitalist', noun:'Vitalist',
+    strong:"You think the padded world is quietly killing something in people. Courage, agency, the capacity to endure — these grow only where outcomes are real, and a society that abolishes risk abolishes adulthood with it.",
+    lean:"You lean toward the strenuous life: more agency, fewer warnings, and a suspicion that safety passed its point of diminishing returns some time ago."},
+  center:"You want the net and the tightrope both — protection where falls are fatal, freedom where they teach.",
+  questions:[
+    {t:"Kids today should be given far more unsupervised freedom — walking alone, rough play, real risks — even if it means more injuries.", dir:1, ctx:"Jonathan Haidt and Greg Lukianoff's work argues that \u2018safetyism\u2019 \u2014 overprotective parenting, supervised childhoods, campus trigger warnings \u2014 has produced a more anxious and fragile generation. Critics argue that the real drivers of youth anxiety are economic and technological, that \u2018resilience\u2019 talk blames victims, and that earlier generations' risks caused real harm we are right to have reduced."},
+    {t:"If AI eliminates most jobs, the government should pay every adult a universal basic income with no work requirement.", dir:-1, ctx:"Universal basic income \u2014 an unconditional cash payment to everyone \u2014 has moved from fringe to mainstream as AI raises fears of mass job displacement, with backers ranging from tech executives to some on the left. Supporters argue it is the only humane response to an economy that may not need most human labor. Opponents argue it is unaffordable, that work provides purpose as well as income, and that \u2018no strings\u2019 payments discourage contribution."},
+    {t:"A life with no real hardship or risk would be a worse life, even if it were happier.", dir:1, ctx:"This is a question about the good life. The \u2018vitalist\u2019 view \u2014 found in Nietzsche, in Stoicism, and in much religious thought \u2014 holds that meaning comes through difficulty overcome, and that a life engineered to remove hardship is a smaller life. The opposing view holds that suffering is just suffering, that people find meaning fine without it, and that romanticizing hardship is easiest for those who have suffered least."},
+    {t:"Adults should be free to take serious risks with their own lives — unapproved medical treatments, dangerous sports, risky investments — without the government stepping in to protect them.", dir:1, ctx:"This is the debate over paternalism. Governments restrict unapproved drugs, dangerous activities, and risky financial products on the grounds that people misjudge risk and society bears the costs of their failures. Libertarians and \u2018right to try\u2019 advocates argue that adults own their own lives, that regulators are systematically over-cautious, and that the freedom to fail is inseparable from the freedom to succeed."},
+  ]
+},
+];
+
+const REFS = [
+{id:'ref-eacc', name:'The e/acc', desc:'Build faster, open everything, let it rip.',
+ scores:{tempo:95, growth:85, roots:-30, order:-45, power:-40, human:80, meaning:-40, risk:70, ladder:60},
+ thinkers:'Marc Andreessen, Guillaume Verdon (“Beff Jezos”)',
+ politician:'Vivek Ramaswamy — about as close as elected U.S. politics gets to open accelerationism',
+ parties:'No party is e/acc. The GOP’s tech-right flank shares the deregulation instinct; both parties’ populist wings distrust the labs. This archetype mostly regards Washington as latency.'},
+{id:'ref-safety', name:'The AI Safetyist', desc:'Transformative AI is coming — slow it and steer it.',
+ scores:{tempo:-75, growth:30, roots:-40, order:45, power:80, human:-10, meaning:-30, risk:-40, ladder:-20},
+ thinkers:'Yoshua Bengio, Stuart Russell, Eliezer Yudkowsky (harder-edged)',
+ politician:'Scott Wiener — author of California’s frontier-AI safety bills',
+ parties:'Cuts clean across both parties: safety hawks span Democrats like Wiener and Republicans like Josh Hawley, while both establishments lean toward racing China. Politically homeless, courted by everyone.'},
+{id:'ref-abundance', name:'The Abundance Liberal', desc:'Build housing, energy, transit; mend the institutions.',
+ scores:{tempo:35, growth:90, roots:-35, order:60, power:10, human:20, meaning:-35, risk:-10, ladder:-10},
+ thinkers:'Ezra Klein, Derek Thompson, Noah Smith',
+ politician:'Jared Polis — governing roughly abundance-style in Colorado',
+ parties:'A reform faction inside the Democratic Party, at war with its own procedural left; its supply-side instincts would be recognizable to the pre-Trump GOP.'},
+{id:'ref-degrowth', name:'The Degrowth Green', desc:'Shrink the footprint; live within limits.',
+ scores:{tempo:-70, growth:-90, roots:-20, order:-15, power:-40, human:-60, meaning:10, risk:-30, ladder:-75},
+ thinkers:'Jason Hickel, Kohei Saito, Greta Thunberg',
+ politician:'No mainstream U.S. politician runs on degrowth; the Green New Deal’s left flank (e.g. AOC) is the nearest neighborhood — though the GND is a build program, not a shrink one',
+ parties:'Outside both parties on growth itself: Democrats want green growth, Republicans want carbon growth, and this archetype rejects the noun.'},
+{id:'ref-postlib', name:'The Post-Liberal', desc:'Faith, family, and place against the machine.',
+ scores:{tempo:-45, growth:10, roots:85, order:-30, power:40, human:-85, meaning:90, risk:45, ladder:10},
+ thinkers:'Patrick Deneen, Rod Dreher, Sohrab Ahmari',
+ politician:'JD Vance — openly shaped by post-liberal thought',
+ parties:'Lives in the GOP’s New Right but rejects its market libertarianism; treats the liberalism both parties share as the actual opponent.'},
+{id:'ref-natpop', name:'The National Populist', desc:'Sovereignty first; the elites are the problem.',
+ scores:{tempo:10, growth:40, roots:90, order:-75, power:30, human:-40, meaning:45, risk:30, ladder:40},
+ thinkers:'Steve Bannon, Oren Cass (its economist)',
+ politician:'Donald Trump — its center of gravity',
+ parties:'Now the Republican mainstream. Its trade politics echo old labor-Democrat protectionism; its distrust of elites resonates with both parties’ bases.'},
+{id:'ref-techlib', name:'The Techno-Libertarian', desc:'Exit over voice; permissionless everything.',
+ scores:{tempo:55, growth:70, roots:-10, order:-65, power:-90, human:45, meaning:-50, risk:60, ladder:85},
+ thinkers:'Balaji Srinivasan, Peter Thiel, Naval Ravikant',
+ politician:'Rand Paul at home; Javier Milei abroad',
+ parties:'The GOP courts it on crypto and deregulation, but its endgame — exit, network states, opt-out governance — has no ballot line in either party.'},
+{id:'ref-leftpop', name:'The Left Populist', desc:'AI is a capital-versus-labor story; act accordingly.',
+ scores:{tempo:-50, growth:-10, roots:15, order:-55, power:-20, human:-55, meaning:-15, risk:-65, ladder:-80},
+ thinkers:'Naomi Klein, Zephyr Teachout',
+ politician:'Bernie Sanders — automation as the newest front of the oligarchy fight',
+ parties:'The Democratic left flank. Shares the National Populist’s trade politics and elite-distrust, but aims at billionaires rather than migrants.'},
+{id:'ref-technat', name:'The Techno-Nationalist', desc:'Win the AI race; the state and the labs row together.',
+ scores:{tempo:65, growth:75, roots:55, order:35, power:65, human:15, meaning:10, risk:25, ladder:35},
+ thinkers:'Jacob Helberg, Palmer Luckey, Alexandr Wang',
+ politician:'Tom Cotton — full-speed AI as a national-security imperative',
+ parties:'Less a faction than the emerging default of the national-security state — hawkish Republicans and security Democrats both fund it.'},
+{id:'ref-classlib', name:'The Classical Liberal', desc:'Markets, institutions, free trade — the old consensus.',
+ scores:{tempo:40, growth:65, roots:-5, order:55, power:-25, human:15, meaning:20, risk:35, ladder:65},
+ thinkers:'Tyler Cowen, Jonah Goldberg, David French',
+ politician:'Nikki Haley — the exiled pre-2016 Republican establishment',
+ parties:'The old GOP mainstream, now homeless: too market-friendly for the populist right, too conservative for Democrats.'},
+{id:'ref-instprog', name:'The Institutional Progressive', desc:'Protect people, trust expertise, regulate harm.',
+ scores:{tempo:-25, growth:20, roots:-60, order:70, power:55, human:-20, meaning:-55, risk:-60, ladder:-60},
+ thinkers:'Tim Wu, Lina Khan, Danielle Allen',
+ politician:'Elizabeth Warren — regulation as a civilizing force',
+ parties:'The governing wing of the Democratic Party. GOP populists share its suspicion of Big Tech, but not its faith in agencies and expertise.'},
+];
+
+const TENSIONS = [
+{a:['tempo','right'], b:['roots','right'],
+ note:"You want the machine to accelerate and the village to hold still — perhaps the deepest tension of this decade. The technologies you're cheering are the strongest solvent ever invented for the rootedness you prize."},
+{a:['order','left'], b:['power','right'],
+ note:"You'd tear down the institutions, yet hand the dangerous tools to a few custodians — but custodians <i>are</i> institutions. Someone has to staff the vault you'd rather burn."},
+{a:['tempo','left'], b:['growth','right'],
+ note:"You want to build everything except the thing being built fastest. Abundance in atoms, restraint in bits — a coherent position, and a lonely one in 2026."},
+{a:['human','right'], b:['meaning','right'],
+ note:"You want both the sacred and the upgrade — remaking human nature while insisting something stands above it. Worth knowing which one yields when they collide."},
+{a:['tempo','right'], b:['risk','left'],
+ note:"You cheer the acceleration but want everyone padded against its impact — the welfare-accelerationist's wager that the floor can be built as fast as the rocket."},
+{a:['meaning','left'], b:['human','left'],
+ note:"You deny any sacred order, yet treat human nature as untouchable — guarding a temple you say is empty. What exactly are you preserving, if not something sacred?"},
+];
+/*__END_AXES_DATA__*/
+
+const LIKERT = [
+  {v:-2, lab:"Strongly disagree"},
+  {v:-1, lab:"Disagree"},
+  {v:0,  lab:"Unsure / mixed"},
+  {v:1,  lab:"Agree"},
+  {v:2,  lab:"Strongly agree"},
+];
+
+/* =============== STATE =============== */
+const $ = id => document.getElementById(id);
+const publicData = (()=>{ try{ return JSON.parse($('public-data').textContent); }catch(e){ return {entries:[]}; } })();
+let entries = Array.isArray(publicData.entries) ? publicData.entries : [];
+
+const LS_ME = 'faultlines_me_v1';
+const SS_PENDING = 'faultlines_pending_v1';
+let me = null;
+try{ me = JSON.parse(localStorage.getItem(LS_ME) || 'null'); }catch(e){}
+
+/* question order: interleave axes so consecutive statements differ */
+const QUESTIONS = (()=>{
+  const qs = [];
+  const maxQ = Math.max(...AXES.map(a=>a.questions.length), 0);
+  for(let i=0;i<maxQ;i++) for(const a of AXES) if(a.questions[i]) qs.push({axis:a, q:a.questions[i]});
+  return qs;
+})();
+
+let answers = new Array(QUESTIONS.length).fill(null);
+let qi = 0;
+
+/* =============== HELPERS =============== */
+function hashStr(s){ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619); } return (h>>>0); }
+function esc(s){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'), 2600); }
+function newId(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
+
+function computeScores(){
+  const scores = {};
+  for(const a of AXES){
+    let sum=0, n=0;
+    QUESTIONS.forEach((qq,i)=>{
+      if(qq.axis.key!==a.key || answers[i]===null) return;
+      sum += answers[i]*qq.q.dir; n++;
+    });
+    scores[a.key] = n? Math.round(sum/(n*2)*100) : 0;
+  }
+  return scores;
+}
+
+function axisByKey(k){ return AXES.find(a=>a.key===k); }
+function poleOf(a, s){ return s>=0 ? a.right : a.left; }
+
+function archetype(scores){
+  const ranked = [...AXES].sort((x,y)=>Math.abs(scores[y.key])-Math.abs(scores[x.key]));
+  const a1=ranked[0], a2=ranked[1];
+  const p1=poleOf(a1,scores[a1.key]), p2=poleOf(a2,scores[a2.key]);
+  if(Math.abs(scores[a1.key])<20) return {title:"The Unresolved", a1, a2};
+  return {title:`The ${p2.adj} ${p1.noun}`, a1, a2};
+}
+
+function intensityWord(s){
+  const v=Math.abs(s);
+  if(v>=75) return "emphatically"; if(v>=50) return "firmly"; if(v>=25) return "moderately"; return "slightly";
+}
+
+function buildWriteup(scores){
+  const ranked=[...AXES].sort((x,y)=>Math.abs(scores[y.key])-Math.abs(scores[x.key]));
+  const arch=archetype(scores);
+  const parts=[];
+  /* intro */
+  const strong=ranked.filter(a=>Math.abs(scores[a.key])>=50);
+  const mild=ranked.filter(a=>Math.abs(scores[a.key])<20);
+  let intro;
+  if(strong.length>=4) intro="You hold a sharply drawn worldview — on most of these fault lines you know exactly which side of the rift you stand on.";
+  else if(strong.length>=2) intro="Your profile has a clear spine: a few strong commitments, with more negotiable ground around them.";
+  else if(mild.length>=5) intro="You resist the poles. On most of these fault lines you sit near the seam — which is itself a position, and an increasingly rare one.";
+  else intro="Your worldview is moderate in temperature but not incoherent — you lean consistently without shouting.";
+  parts.push(`<p>${intro}</p>`);
+  /* top axes prose */
+  for(const a of ranked.slice(0,4)){
+    const s=scores[a.key];
+    const p=poleOf(a,s);
+    const txt = Math.abs(s)>=50 ? p.strong : Math.abs(s)>=20 ? p.lean : a.center;
+    if(txt) parts.push(`<p><b>${esc(a.name)}.</b> ${txt}</p>`);
+  }
+  /* tensions */
+  for(const t of TENSIONS){
+    const sa=scores[t.a[0]], sb=scores[t.b[0]];
+    const hitA = t.a[1]==='right'? sa>=30 : sa<=-30;
+    const hitB = t.b[1]==='right'? sb>=30 : sb<=-30;
+    if(hitA&&hitB){ parts.push(`<p class="tension">${t.note}</p>`); break; }
+  }
+  /* percentile vs public, if enough data */
+  const pool=entries.filter(e=>!me||e.id!==me.id);
+  if(pool.length>=5){
+    const a=ranked[0], s=scores[a.key];
+    const below=pool.filter(e=>(e.scores[a.key]??0) < s).length;
+    const pct=Math.round(below/pool.length*100);
+    const side = s>=0? a.right.label : a.left.label;
+    const shown = s>=0? pct : 100-pct;
+    parts.push(`<p>On <b>${esc(a.name)}</b> — your most pronounced line — you sit further toward <i>${esc(side)}</i> than ${shown}% of the people on the public map.</p>`);
+  }
+  return parts.join('');
+}
+
+/* =============== LANDING =============== */
+function renderLanding(){
+  $('axis-chips').innerHTML = AXES.map(a=>`<span class="chip">${esc(a.left.label)}<i>·</i>${esc(a.right.label)}</span>`).join('');
+  const n=entries.length;
+  $('pub-count').innerHTML = n? `<b>${n}</b> public ${n===1?'profile':'profiles'} on the map` : `Be the first on the public map`;
+}
+
+/* =============== QUIZ =============== */
+function show(view){
+  for(const v of ['landing','quiz','results']) $(v).classList.toggle('hidden', v!==view);
+  window.scrollTo({top:0});
+}
+
+function renderQ(){
+  const {axis,q}=QUESTIONS[qi];
+  $('q-axis').textContent = axis.domain || 'fault line '+(AXES.indexOf(axis)+1);
+  $('q-count').textContent = `${qi+1} / ${QUESTIONS.length}`;
+  $('q-bar').style.width = (qi/QUESTIONS.length*100)+'%';
+  const st=$('q-text'); st.textContent=q.t;
+  st.style.animation='none'; void st.offsetWidth; st.style.animation='';
+  $('ctx-panel').textContent=q.ctx||'';
+  $('ctx-panel').classList.add('hidden');
+  $('ctx-btn').setAttribute('aria-expanded','false');
+  $('ctx-btn').classList.toggle('hidden', !q.ctx);
+  $('q-answers').innerHTML = LIKERT.map((o,i)=>`
+    <button class="ans ${answers[qi]===o.v?'sel':''}" data-v="${o.v}">
+      <span class="dot"></span><span class="lab">${o.lab}</span><span class="key">${i+1}</span>
+    </button>`).join('');
+  $('q-answers').querySelectorAll('.ans').forEach(b=>b.addEventListener('click',()=>answer(+b.dataset.v)));
+  $('q-back').disabled = qi===0;
+}
+
+function answer(v){
+  answers[qi]=v;
+  if(qi<QUESTIONS.length-1){ qi++; setTimeout(renderQ, 120); }
+  else finish();
+}
+
+function finish(){
+  const scores=computeScores();
+  const arch=archetype(scores);
+  me = me && me.public ? me : null; /* replaced below */
+  const keepId = (me&&me.id) || (JSON.parse(localStorage.getItem(LS_ME)||'null')||{}).id;
+  me = { id: keepId || newId(), name:(me&&me.name)||'', scores, archetype:arch.title, ts:Date.now(), public:false };
+  /* if previously public, retaking updates the public entry too */
+  const wasPublic = entries.some(e=>e.id===me.id);
+  localStorage.setItem(LS_ME, JSON.stringify(me));
+  renderResults();
+  show('results');
+  if(wasPublic){ me.public=true; localStorage.setItem(LS_ME, JSON.stringify(me)); persist({type:'upsert'}); }
+}
+
+document.addEventListener('keydown',e=>{
+  if($('quiz').classList.contains('hidden')) return;
+  if(e.key>='1'&&e.key<='5') answer(LIKERT[+e.key-1].v);
+  if(e.key==='ArrowLeft'&&qi>0){ qi--; renderQ(); }
+});
+$('q-back').addEventListener('click',()=>{ if(qi>0){qi--;renderQ();} });
+$('ctx-btn').addEventListener('click',()=>{
+  const open=$('ctx-panel').classList.toggle('hidden');
+  $('ctx-btn').setAttribute('aria-expanded', open?'false':'true');
+});
+$('begin').addEventListener('click',()=>{ qi = answers.findIndex(a=>a===null); if(qi<0) qi=0; show('quiz'); renderQ(); });
+$('retake').addEventListener('click',()=>{ answers=new Array(QUESTIONS.length).fill(null); qi=0; show('quiz'); renderQ(); });
+
+/* =============== RESULTS RENDERING =============== */
+function othersPool(){
+  const pool = entries.filter(e=>!me||e.id!==me.id).map(e=>({...e,ref:false}));
+  return pool.concat(REFS.map(r=>({...r, ref:true})));
+}
+
+function renderResults(){
+  const scores=me.scores;
+  const arch=archetype(scores);
+  $('arch-title').textContent = arch.title;
+  const nearest=REFS.map(r=>({r,sim:similarity(scores,r.scores)})).sort((a,b)=>b.sim-a.sim)[0];
+  $('arch-sub').innerHTML = `Your reading is composed from your two strongest lines — <b>${esc(arch.a1.name)}</b> and <b>${esc(arch.a2.name)}</b>. Nearest archetype: <b>${esc(nearest.r.name)}</b>, a ${nearest.sim}% match across all nine.`;
+  $('writeup').innerHTML = buildWriteup(scores);
+  renderStrips(scores);
+  renderMapControls();
+  renderScatter();
+  renderMatches(scores);
+  renderArchCards(scores);
+  renderPrivacy();
+  const n=entries.length;
+  $('res-count').textContent = n? `${n} public ${n===1?'profile':'profiles'} · ${REFS.length} archetypes` : `${REFS.length} reference archetypes`;
+  $('strip-note').textContent = entries.length? '' : ' — no public results yet, so you’re plotted against the reference archetypes';
+}
+
+function stripSVG(a, myScore){
+  const pct=s=>((s+100)/200*100).toFixed(2);
+  const pool=othersPool();
+  let h=`<div class="lane" aria-hidden="true"><div class="lane-line"></div>`;
+  for(const t of [-100,-50,0,50,100]) h+=`<span class="tick ${t===0?'mid':''}" style="left:${pct(t)}%"></span>`;
+  for(const p of pool){
+    const s=p.scores[a.key]??0;
+    const pole=poleOf(a,s).label;
+    const sub = p.ref ? `archetype · ${esc(pole)} ${s>0?'+':''}${s}` : `${esc(pole)} ${s>0?'+':''}${s}`;
+    h+= p.ref
+      ? `<span class="oref" style="left:${pct(s)}%" data-tip="${esc(p.name)}" data-sub="${sub}"></span>`
+      : `<span class="odot" style="left:${pct(s)}%" data-tip="${esc(p.name||'Anonymous')}" data-sub="${sub}"></span>`;
+  }
+  h+=`<span class="mdot" style="left:${pct(myScore)}%"></span></div>`;
+  return h;
+}
+
+function renderStrips(scores){
+  $('strips').innerHTML = AXES.map(a=>{
+    const s=scores[a.key];
+    const p=poleOf(a,s);
+    return `<div class="strip">
+      <div class="strip-head">
+        <span class="strip-name">${esc(a.name)}</span>
+        <span class="strip-score">${intensityWord(s)} <b>${esc(p.label)}</b> · ${s>0?'+':''}${s}</span>
+      </div>
+      ${stripSVG(a,s)}
+      <div class="strip-poles">
+        <span class="pa">&larr; ${esc(a.left.label)}<small>${esc(a.left.hint)}</small></span>
+        <span class="pb">${esc(a.right.label)} &rarr;<small>${esc(a.right.hint)}</small></span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderMapControls(){
+  const opts=AXES.map(a=>`<option value="${a.key}">${esc(a.name)}</option>`).join('');
+  $('map-x').innerHTML=opts; $('map-y').innerHTML=opts;
+  const ranked=[...AXES].sort((x,y)=>Math.abs(me.scores[y.key])-Math.abs(me.scores[x.key]));
+  $('map-x').value=ranked[0].key; $('map-y').value=ranked[1].key;
+  $('map-x').onchange=renderScatter; $('map-y').onchange=renderScatter;
+}
+
+function renderScatter(){
+  const ax=axisByKey($('map-x').value), ay=axisByKey($('map-y').value);
+  const W=920,H=560,pad=56;
+  const px=s=>pad+((s+100)/200)*(W-2*pad);
+  const py=s=>H-pad-((s+100)/200)*(H-2*pad);
+  let g=`<rect x="0" y="0" width="${W}" height="${H}" fill="none"/>`;
+  /* grid */
+  for(const t of [-100,-50,0,50,100]){
+    g+=`<line x1="${px(t)}" y1="${pad}" x2="${px(t)}" y2="${H-pad}" stroke="var(--line-soft)" stroke-width="${t===0?1.5:1}"/>`;
+    g+=`<line x1="${pad}" y1="${py(t)}" x2="${W-pad}" y2="${py(t)}" stroke="var(--line-soft)" stroke-width="${t===0?1.5:1}"/>`;
+  }
+  const L=(x,y,t,anchor,cls)=>`<text x="${x}" y="${y}" text-anchor="${anchor}" font-family="'Spline Sans Mono',monospace" font-size="10.5" letter-spacing=".08em" fill="${cls}" style="text-transform:uppercase">${esc(t)}</text>`;
+  const Lh=(x,y,t,anchor)=>`<text x="${x}" y="${y}" text-anchor="${anchor}" font-family="'Schibsted Grotesk',system-ui,sans-serif" font-size="11" fill="var(--muted)">${esc(t)}</text>`;
+  g+=L(pad,H-pad+26,ax.left.label,'start','var(--pole-a)')+Lh(pad,H-pad+41,ax.left.hint,'start');
+  g+=L(W-pad,H-pad+26,ax.right.label,'end','var(--pole-b)')+Lh(W-pad,H-pad+41,ax.right.hint,'end');
+  g+=`<g transform="translate(${pad-38},${H-pad}) rotate(-90)">`+L(0,0,ay.left.label,'start','var(--pole-a)')+Lh(0,14,ay.left.hint,'start')+`</g>`;
+  g+=`<g transform="translate(${pad-38},${pad}) rotate(-90)">`+L(0,0,ay.right.label,'end','var(--pole-b)')+Lh(0,14,ay.right.hint,'end')+`</g>`;
+  /* points */
+  for(const p of othersPool()){
+    const x=px(p.scores[ax.key]??0), y=py(p.scores[ay.key]??0);
+    if(p.ref){
+      g+=`<rect x="${x-5}" y="${y-5}" width="10" height="10" transform="rotate(45 ${x} ${y})" fill="var(--card)" stroke="var(--others)" stroke-width="1.4"><title>${esc(p.name)}</title></rect>`;
+      g+=`<text x="${x+10}" y="${y+4}" font-family="'Spline Sans Mono',monospace" font-size="10" fill="var(--faint)">${esc(p.name)}</text>`;
+    } else {
+      g+=`<circle cx="${x}" cy="${y}" r="5" fill="var(--others)" opacity=".6"><title>${esc(p.name||'Anonymous')}</title></circle>`;
+    }
+  }
+  const mx=px(me.scores[ax.key]), my=py(me.scores[ay.key]);
+  g+=`<circle cx="${mx}" cy="${my}" r="9" fill="var(--you)" stroke="var(--paper)" stroke-width="2.5"/>`;
+  g+=`<text x="${mx+13}" y="${my+4}" font-family="'Spline Sans Mono',monospace" font-size="11" font-weight="600" fill="var(--you)">you</text>`;
+  $('scatter').innerHTML=g;
+}
+
+function similarity(a,b){
+  /* mostly direction of lean (cosine), a little distance — so moderates match by which way they lean, not by which archetype is mildest */
+  let d2=0, dot=0, na=0, nb=0;
+  for(const ax of AXES){
+    const x=a[ax.key]??0, y=b[ax.key]??0;
+    d2+=((x-y)/200)**2; dot+=x*y; na+=x*x; nb+=y*y;
+  }
+  const euc=1-Math.sqrt(d2/AXES.length);
+  const cos=(na&&nb)? Math.max(0, dot/Math.sqrt(na*nb)) : 0;
+  return Math.round((0.7*cos+0.3*euc)*100);
+}
+
+function renderMatches(scores){
+  const pool=othersPool().map(p=>({...p, sim:similarity(scores,p.scores)}))
+    .sort((a,b)=>b.sim-a.sim).slice(0,4);
+  $('matches').innerHTML = pool.map(p=>`
+    <div class="match ${p.ref?'ref':''}">
+      <span class="pct" style="color:${p.sim>=80?'var(--good)':'var(--ink)'}">${p.sim}%</span>
+      <div><div class="who">${esc(p.name||'Anonymous')}</div><div class="what">${esc(p.ref? p.desc : (p.archetype||''))}</div></div>
+    </div>`).join('');
+}
+
+function renderArchCards(scores){
+  const sims=REFS.map(r=>({r, sim:similarity(scores,r.scores)}));
+  const best=Math.max(...sims.map(x=>x.sim));
+  $('arch-grid').innerHTML = sims.map(({r,sim})=>`
+    <div class="acard ${sim===best?'nearest':''}">
+      ${sim===best?'<span class="badge">nearest you</span>':''}
+      <h4>${esc(r.name)}</h4>
+      <p class="adesc">${esc(r.desc)}</p>
+      <div class="arow"><span class="k">Thinkers nearby</span>${esc(r.thinkers)}</div>
+      <div class="arow"><span class="k">Closest politician</span>${esc(r.politician)}</div>
+      <div class="arow vs"><span class="k">vs. the parties</span>${esc(r.parties)}</div>
+    </div>`).join('');
+}
+
+/* =============== PRIVACY / PUBLISH =============== */
+let readOnly=false;
+
+function renderPrivacy(){
+  const c=$('priv-controls'), n=$('priv-notice');
+  n.textContent=''; n.className='notice';
+  if(me.public){
+    c.innerHTML=`<div class="priv-status"><span class="pill public">Public</span><span>on the map as <b>${esc(me.name||'Anonymous')}</b></span></div>
+      <button class="btn ghost" id="make-private">Make private</button>`;
+    $('make-private').addEventListener('click',()=>{ persist({type:'remove'}); });
+  } else {
+    c.innerHTML=`<input class="priv-name" id="pub-name" maxlength="24" placeholder="Display name (optional)" value="${esc(me.name||'')}">
+      <button class="btn" id="make-public">Make public</button>
+      <div class="priv-status"><span class="pill">Private</span></div>`;
+    $('make-public').addEventListener('click',()=>{
+      me.name=$('pub-name').value.trim();
+      persist({type:'upsert'});
+    });
+  }
+  if(readOnly){ n.textContent='This copy of the page is read-only for you, so results can’t be saved to the shared map — yours stays on this device.'; }
+}
+
+function entryFromMe(){
+  return {id:me.id, name:me.name||'', ts:me.ts, scores:me.scores, archetype:me.archetype};
+}
+
+async function persist(op, silent){
+  const n=$('priv-notice');
+  const cap = window.claude && window.claude.use ? await window.claude.use('artifact') : null;
+  if(!cap){
+    if(!silent){ n.className='notice err'; n.textContent='The shared map isn’t reachable from this copy of the page — your result stays private on this device.'; }
+    return;
+  }
+  let src;
+  try{
+    const r=await fetch(location.href,{cache:'no-store'});
+    src=await r.text();
+  }catch(e){
+    if(!silent){ n.className='notice err'; n.textContent='Couldn’t load the current shared data. Your result stays on this device — try again in a moment.'; }
+    return;
+  }
+  const re=/(<script id="public-data" type="application\/json">)([\s\S]*?)(<\/script>)/;
+  const m=src.match(re);
+  if(!m){ if(!silent){ n.className='notice err'; n.textContent='Shared data block not found — result kept private.'; } return; }
+  let data; try{ data=JSON.parse(m[2]); }catch(e){ data={entries:[]}; }
+  let list=Array.isArray(data.entries)? data.entries : [];
+  list=list.filter(e=>e.id!==me.id);
+  if(op.type==='upsert') list.push(entryFromMe());
+  const json=JSON.stringify({entries:list}).replace(/</g,'\\u003c');
+  const newSrc=src.replace(re, (_,a,__,carr)=>a+json+carr);
+  /* stash intent so it survives the reload that follows a successful or conflicted publish */
+  me.public = op.type==='upsert';
+  localStorage.setItem(LS_ME, JSON.stringify(me));
+  sessionStorage.setItem(SS_PENDING, JSON.stringify({op:op.type, attempts:(op.attempts||0)+1, done:false}));
+  try{
+    await cap.publish(newSrc);
+    /* page reloads after successful publish; mark done in case reload is delayed */
+    sessionStorage.setItem(SS_PENDING, JSON.stringify({op:op.type, done:true}));
+  }catch(err){
+    const code=err&&err.code;
+    if(code==='conflict'){ /* view reloads to winner; pending op re-runs on load */ return; }
+    sessionStorage.removeItem(SS_PENDING);
+    if(code==='not_writer'||code==='not_granted'||code==='consent_required'||code==='capability_disabled'){
+      readOnly=true; me.public=false; localStorage.setItem(LS_ME, JSON.stringify(me)); renderPrivacy();
+    } else if(code==='rate_limited'){
+      me.public=false; localStorage.setItem(LS_ME, JSON.stringify(me)); renderPrivacy();
+      n.className='notice err'; n.textContent='The map is being updated too quickly — wait a few seconds and try again.';
+    } else {
+      me.public=false; localStorage.setItem(LS_ME, JSON.stringify(me)); renderPrivacy();
+      n.className='notice err'; n.textContent='Saving to the shared map failed — your result is still safe on this device.';
+    }
+  }
+}
+
+/* =============== TOOLTIP =============== */
+(function(){
+  const tip=$('tip');
+  let cur=null;
+  function place(e){
+    const pad=14, w=tip.offsetWidth, h=tip.offsetHeight;
+    let x=e.clientX+pad, y=e.clientY-h-pad;
+    if(x+w>innerWidth-8) x=e.clientX-w-pad;
+    if(y<8) y=e.clientY+pad;
+    tip.style.left=x+'px'; tip.style.top=y+'px';
+  }
+  document.addEventListener('mouseover',e=>{
+    const t=e.target.closest('[data-tip]'); if(!t) return;
+    cur=t; tip.innerHTML=`<b>${t.dataset.tip}</b><span>${t.dataset.sub||''}</span>`;
+    tip.classList.add('show'); place(e);
+  });
+  document.addEventListener('mousemove',e=>{ if(cur) place(e); });
+  document.addEventListener('mouseout',e=>{
+    if(cur && !cur.contains(e.relatedTarget)){ cur=null; tip.classList.remove('show'); }
+  });
+})();
+
+/* =============== BOOT =============== */
+function boot(){
+  renderLanding();
+  /* finish an interrupted publish (conflict reload) */
+  let pending=null;
+  try{ pending=JSON.parse(sessionStorage.getItem(SS_PENDING)||'null'); }catch(e){}
+  if(pending && pending.done){
+    sessionStorage.removeItem(SS_PENDING);
+    if(me){ renderResults(); show('results'); toast(pending.op==='upsert'?'You’re on the map':'Your result is private again'); }
+    return;
+  }
+  if(pending && !pending.done && me && pending.attempts<3){
+    renderResults(); show('results');
+    persist({type:pending.op, attempts:pending.attempts}, true);
+    return;
+  }
+  sessionStorage.removeItem(SS_PENDING);
+  if(me && me.scores){
+    /* returning visitor: their public flag may be stale if data changed elsewhere */
+    me.public = entries.some(e=>e.id===me.id);
+    renderResults(); show('results');
+  }
+}
+boot();
+</script>
